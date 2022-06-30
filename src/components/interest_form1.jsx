@@ -7,29 +7,77 @@ import {
   FormControlLabel,
   Radio,
 } from "@mui/material";
-import React from "react";
-
-const textField = (val) => (
-  <TextField id="standard-basic" name={val} label={val} variant="standard" />
-);
-
-const boolRadio = (val) => (
-  <FormControl>
-    <FormLabel id="demo-radio-buttons-group-label">
-      Do you have an {val}
-    </FormLabel>
-    <RadioGroup
-      aria-labelledby="demo-radio-buttons-group-label"
-      defaultValue="No"
-      name="{val}?"
-    >
-      <FormControlLabel value="1" control={<Radio />} label="Yes" />
-      <FormControlLabel value="0" control={<Radio />} label="No" />
-    </RadioGroup>
-  </FormControl>
-);
+import React, { useState } from "react";
 
 function InitialForm() {
+  const [input, setInput] = useState({})
+
+  const onInputChange = (e) => {
+    const { name, value } = e.target;
+    setInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const textField = (val) => {
+    if (val === "Email") {
+      return (
+        <TextField
+          type="email"
+          id="standard-basic"
+          name={val}
+          label={val}
+          variant="standard"
+        />
+      );
+    } else if (val === "Password" || val === "Confirm Password") {
+      return (
+        <TextField
+          type="password"
+          id="standard-basic"
+          name={val}
+          label={val}
+          variant="standard"
+          onChange={onInputChange}
+        />
+      );
+    } else {
+      return (
+        <TextField
+          id="standard-basic"
+          name={val}
+          label={val}
+          variant="standard"
+        />
+      );
+    }
+  };
+
+  const boolRadio = (val) => (
+    <FormControl>
+      <FormLabel id="demo-radio-buttons-group-label">
+        Do you have an {val}?
+      </FormLabel>
+      <RadioGroup
+        aria-labelledby="demo-radio-buttons-group-label"
+        defaultValue="No"
+        name={val}
+      >
+        <FormControlLabel value="1" control={<Radio />} label="Yes" />
+        <FormControlLabel value="0" control={<Radio />} label="No" />
+      </RadioGroup>
+    </FormControl>
+  );
+
+  const submitHandler = e => {
+    // console.log(input)
+    if (input['Password'] != input['Confirm Password']) {
+      alert("Passwords Do Not Match");
+      e.preventDefault();
+    }
+  };
+
   return (
     <form method="POST" action="http://localhost:8000/api/upload-forms">
       {[
@@ -59,8 +107,8 @@ function InitialForm() {
           <input type="file" name="field" hidden />
         </Button>
       ))}
-      
-      <Button type="submit" variant="outlined">
+      {["Password", "Confirm Password"].map((field) => textField(field))}
+      <Button type="submit" variant="outlined" onClick={submitHandler}>
         Submit
       </Button>
     </form>
