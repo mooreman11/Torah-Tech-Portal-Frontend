@@ -72,7 +72,7 @@ function InitialForm() {
 
   const submitHandler = e => {
     // console.log(input)
-    if (input['Password'] != input['Confirm Password']) {
+    if (input['Password'] !== input['Confirm Password']) {
       alert("Passwords Do Not Match");
       e.preventDefault();
     }
@@ -103,7 +103,7 @@ function InitialForm() {
       {["Current School", "Synogogue"].map((field) => textField(field))}
       {["High School Transcripts", "Photo", "Resume"].map((field) => (
         <Button variant="contained" component="label">
-          Insurance Forms
+          {field}
           <input type="file" name="field" hidden />
         </Button>
       ))}
